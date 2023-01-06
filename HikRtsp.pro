@@ -47,3 +47,6 @@ INCLUDEPATH += $$PWD/lib/x86_64
 DEPENDPATH += $$PWD/lib/x86_64
 INCLUDEPATH += /usr/include
 
+DISTFILES += \
+    README.md
+
