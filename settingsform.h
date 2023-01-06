@@ -28,6 +28,9 @@ public:
 
     QStringList FillCmbUris();
 
+    void FillVars(int Idx);
+
+
 private slots:
     void on_BtnSave_released();
 

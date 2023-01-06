@@ -16,6 +16,7 @@ QFile Fs("/tmp/tmp.mp4");
 
 QByteArray MainWindow::PayLTmpBuff;
 QVideoWidget *MainWindow::videoWidget;
+SettingsForm *MainWindow::Settings;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -47,7 +48,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)),
             this, SLOT(authenticationRequired(QNetworkReply*, QAuthenticator*)));
 
-
     //MainWindow::Connect();
 
 }
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     if (public_method == "PLAY")
-    MainWindow::on_actionTEARDOWN_triggered();
+        MainWindow::on_actionTEARDOWN_triggered();
     delete ui;
 }
 
@@ -940,6 +940,8 @@ QByteArray MainWindow::MD5Compute(QByteArray Str)
 
 void MainWindow::Authanticate(QString( public_method))
 {
+
+    Settings->FillVars(ui->comboBoxUris->currentIndex());
     QString StrHA1 = Settings->CamUser + ":" + realm + ":" + Settings->CamPass;
     QString StrHA2 = public_method + ":" + RtspUri;
     StrHA1 = StrHA1.remove("\"");
@@ -1193,4 +1195,9 @@ void MainWindow::on_comboBoxUris_currentIndexChanged(const QString &arg1)
 void MainWindow::on_comboBoxChanel_currentIndexChanged(const QString &arg1)
 {
     RtspUri =  ui->comboBoxUris->currentText() + arg1;
+}
+
+void MainWindow::on_comboBoxUris_currentIndexChanged(int index)
+{
+    Settings->FillVars(index);
 }
