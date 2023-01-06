@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>874</width>
+    <height>201</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>HikRtsp</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLineEdit" name="TxtTrackID">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>30</y>
+      <width>51</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxUris">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>851</width>
+      <height>32</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxChanel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>117</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="editable">
+     <bool>true</bool>
+    </property>
+    <item>
+     <property name="text">
+      <string>101</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>102</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>103</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>104</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>874</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuRtsp">
+    <property name="title">
+     <string>Rtsp</string>
+    </property>
+    <widget class="QMenu" name="menuManual">
+     <property name="title">
+      <string>Manual</string>
+     </property>
+     <addaction name="actionDESC_no_DIGEST"/>
+     <addaction name="actionDESCRI"/>
+     <addaction name="actionOPTION"/>
+     <addaction name="actionSETUP_URL"/>
+     <addaction name="actionSETUP"/>
+     <addaction name="actionPLAY"/>
+     <addaction name="actionTEARDOWN"/>
+    </widget>
+    <addaction name="actionPlay"/>
+    <addaction name="menuManual"/>
+    <addaction name="actionAuthor"/>
+    <addaction name="actiontest"/>
+    <addaction name="actionSettings"/>
+   </widget>
+   <addaction name="menuRtsp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionPlay">
+   <property name="text">
+    <string>Play</string>
+   </property>
+  </action>
+  <action name="actionDESCRI">
+   <property name="text">
+    <string>DESCRI</string>
+   </property>
+  </action>
+  <action name="actionSETUP_URL">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>SETUP_URL</string>
+   </property>
+   <property name="visible">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionSETUP">
+   <property name="text">
+    <string>SETUP</string>
+   </property>
+  </action>
+  <action name="actionPLAY">
+   <property name="text">
+    <string>PLAY</string>
+   </property>
+  </action>
+  <action name="actionOPTION">
+   <property name="text">
+    <string>OPTION</string>
+   </property>
+  </action>
+  <action name="actiontest">
+   <property name="text">
+    <string>test</string>
+   </property>
+  </action>
+  <action name="actionAuthor">
+   <property name="text">
+    <string>Author</string>
+   </property>
+  </action>
+  <action name="actionTEARDOWN">
+   <property name="text">
+    <string>TEARDOWN</string>
+   </property>
+  </action>
+  <action name="actionDESC_no_DIGEST">
+   <property name="text">
+    <string>DESC no DIGEST</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
