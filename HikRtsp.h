@@ -125,7 +125,7 @@ private:
     QByteArray Magic = QByteArray::fromHex("2400");
     int Nexti = 0;
     QString HIKHeader;
-    QString Transport ="RTP/AVP/TCP";
+    QString Transport ="RTP/AVP/TCP;broadcast;interleaved=0-1";
 
     PLAYM4_SESSION_INFO* pstSessionInfo;
     unsigned char* SdpData;
@@ -133,7 +133,7 @@ private:
     unsigned int nThreShold;
     unsigned int dwUser;
     void* pReserved;
-    QStringList trackID = { "1", "3" };
+    QStringList trackID = { "/trackID=1", "/trackID==3" };
     QString ssrc;//synchronization source (SSRC) identifier
     QString sps;//Sequence Parameter Set
     QString pps;//Picture Parameter Set

@@ -328,13 +328,13 @@ void MainWindow::readData(QByteArray Resp)
         //Sleep(5);
         SendReq("SETUP");
     }
-    if (NeedAuth == false && public_method == "SETUP" && GotSdp == true && LastCSeq == CSeq - 1 && trackID[0] == "1" ) {
+    if (NeedAuth == false && public_method == "SETUP" && GotSdp == true && LastCSeq == CSeq - 1 && trackID[0] == "/trackID=1" ) {
         LastCSeq = CSeq;
         //Sleep(5);
-        trackID[0] = "1";
+        trackID[0] = "/trackID=1";
         SendReq("PLAY");
     }
-    if (public_method == "SETUP" && Transport != "" && LastCSeq == CSeq - 1 && trackID[0] == "3" ) {
+    if (public_method == "SETUP" && Transport != "" && LastCSeq == CSeq - 1 && trackID[0] == "/trackID=3" ) {
         LastCSeq = CSeq;
         SendReq("PLAY");
     }
@@ -679,7 +679,7 @@ void MainWindow::on_actionPlay_triggered()
     IsRTSB = false;
     MaxRetry = 0;
     PayNum = 0;
-    trackID[0] = "1";
+    trackID[0] = "/trackID=1";
     Fs.open(QIODevice::OpenModeFlag::WriteOnly);
     /*QString url =
             QInputDialog::getText(this, tr("Open Url"), tr("Enter the URL you want to play"));
@@ -763,12 +763,15 @@ void MainWindow::authenticationRequired(QNetworkReply *reply, QAuthenticator *au
 
 void MainWindow::RtspHeaders()
 {
-    ReqSetUrl="SETUP " + RtspUri + "/trackID=" + trackID[0] + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nTransport: " + Transport + ";\r\nUser-Agent: QtVsPlayer\r\n\r\n";
-    ReqdestNoDigest="DESCRIBE " + RtspUri + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "User-Agent: QtVsPlayer\r\n\r\n";
+    if(trackID.length() == 0)trackID.append("/stream=0");
+
+    ReqSetUrl="SETUP " + RtspUri + trackID[0] + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nTransport: " + Transport + ";\r\nUser-Agent: QtVsPlayer\r\n\r\n";
+
+    ReqdestNoDigest="DESCRIBE " + RtspUri + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nUser-Agent: QtVsPlayer\r\n\r\n";
 
     Reqdest="DESCRIBE " + RtspUri + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nAccept: application/sdp\r\nAuthorization: Digest username=\"admin\", realm=" + realm + ", nonce=\"" + nonce + "\", uri=\"" + RtspUri + "\", response=\"" + response + "\";\r\nUser-Agent: QtVsPlayer\r\n\r\n";
 
-    Reqsetu="SETUP " + RtspUri + "/trackID=" + trackID[0] + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nTransport: " + Transport + "\r\nAuthorization: Digest username=\"admin\", realm=" + realm + ", nonce=\"" + nonce + "\", uri=\"" + RtspUri + "\", response=\"" + response + "\";\r\nUser-Agent: QtVsPlayer\r\n\r\n";
+    Reqsetu="SETUP " + RtspUri + trackID[0] + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nTransport: " + Transport + "\r\nAuthorization: Digest username=\"admin\", realm=" + realm + ", nonce=\"" + nonce + "\", uri=\"" + RtspUri + "\", response=\"" + response + "\";\r\nUser-Agent: QtVsPlayer\r\n\r\n";
 
     ReqOption="OPTIONS " + RtspUri + " RTSP/1.0\r\nCSeq: " + QString::number(CSeq) + "\r\nUser-Agent: QtVsPlayer\r\n\r\n";
 
@@ -890,10 +893,11 @@ QStringList MainWindow::FindRTSPVar(QString Line)
     if (DataAsStrList.length() == 3) {
         QString Id = DataAsStrList.at(2);
         if(!trackID.contains(Id))
-            trackID.append(Id);
+            trackID.append("/trackID=" + Id);
         return trackID;
     }
-
+    trackID.append("");
+return trackID;
 }
 
 QString MainWindow::FindRTSPVar(QString Str, QString Line)
@@ -1190,11 +1194,18 @@ void MainWindow::InitSettings()
 void MainWindow::on_comboBoxUris_currentIndexChanged(const QString &arg1)
 {
     RtspUri = arg1 + ui->comboBoxChanel->currentText();
+
+    if (Settings->CamName == "localhost") {
+        RtspUri.replace(ui->comboBoxChanel->currentText(),"");
+    }
 }
 
 void MainWindow::on_comboBoxChanel_currentIndexChanged(const QString &arg1)
 {
     RtspUri =  ui->comboBoxUris->currentText() + arg1;
+    if (Settings->CamName == "localhost") {
+        RtspUri.replace(arg1,"");
+    }
 }
 
 void MainWindow::on_comboBoxUris_currentIndexChanged(int index)
