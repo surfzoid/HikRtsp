@@ -112,12 +112,12 @@ QStringList SettingsForm::FillCmbUris()
         CamPass = crypto.decryptToString(settings.value("Password", "hik12345").value<QString>());
         settings.endGroup();
 
-        if (CamPass != "hik12345" && !CamPass.isEmpty()) {
+        /*if (CamPass != "hik12345" && !CamPass.isEmpty()) {
             Uris.append( "rtsp://" + CamUser + ":" + CamPass + "@" + CamIp + ":" + CamPort + "/ISAPI/streaming/channels/");
         }else
-        {
+        {*/
             Uris.append( "rtsp://" + CamIp + ":" + CamPort + "/ISAPI/streaming/channels/");
-        }
+        //}
         if (CamName == "localhost") {
             Uris[i].replace("ISAPI/streaming/channels/","test");
         }

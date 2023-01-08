@@ -204,8 +204,9 @@ void MainWindow::readData(QByteArray Resp)
                         i = 0;
                     }else
                     {
-                        if (Nexti > 0) {
+                        if (Nexti > 0 && NextiHead == 0) {
                             i = Nexti;
+                            NextiHead = 12 - Nexti;
                             Nexti = 0;
                         }
 
@@ -215,7 +216,8 @@ void MainWindow::readData(QByteArray Resp)
                         if (NeedMoreData > Resp.length()) {
                             qDebug() << ">>>>>>>>>>Got" << Resp.length() << "need more" << NeedMoreData;
                             PayLTmpBuff.append(Resp.mid(i , NeedMoreData ));
-                            NeedMoreData = (i + NeedMoreData) - Resp.length();
+                            NeedMoreData = (i + NeedMoreData) - Resp.length() - NextiHead;
+                            NextiHead = 0;
                             return;
                         } else {
                             PayLTmpBuff.append(Resp.mid(i , NeedMoreData ));
@@ -680,7 +682,8 @@ void MainWindow::on_actionPlay_triggered()
     MaxRetry = 0;
     PayNum = 0;
     trackID[0] = "/trackID=1";
-    Fs.open(QIODevice::OpenModeFlag::WriteOnly);
+    if(!Fs.isOpen())
+        Fs.open(QIODevice::OpenModeFlag::WriteOnly);
     /*QString url =
             QInputDialog::getText(this, tr("Open Url"), tr("Enter the URL you want to play"));
     if (url.isEmpty())
@@ -897,7 +900,7 @@ QStringList MainWindow::FindRTSPVar(QString Line)
         return trackID;
     }
     trackID.append("");
-return trackID;
+    return trackID;
 }
 
 QString MainWindow::FindRTSPVar(QString Str, QString Line)

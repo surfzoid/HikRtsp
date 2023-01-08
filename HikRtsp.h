@@ -124,6 +124,7 @@ private:
     bool GotSdp = false;
     QByteArray Magic = QByteArray::fromHex("2400");
     int Nexti = 0;
+    int NextiHead = 0;
     QString HIKHeader;
     QString Transport ="RTP/AVP/TCP;broadcast;interleaved=0-1";
 
