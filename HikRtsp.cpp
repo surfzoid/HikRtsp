@@ -10,7 +10,7 @@
 #include <QDataStream>
 
 LONG  g_nPort  = -1;
-QFile Fs("/tmp/tmp.mp4");
+QFile Fs("/tmp/tmp.h265");
 #define READ_BUF_SIZE 200
 #define HIK_HEAD_LEN 40
 
@@ -168,10 +168,10 @@ void MainWindow::readyRead()
 
     qDebug() << "Reading..." << m_socket->bytesAvailable();
 
-    /*while(m_socket->bytesAvailable())
+    if (!IsPlayM4)
         readData(m_socket->readAll());
-    Sleep(5);*/
-
+    if (m_socket->bytesAvailable() < 14400)
+        return;
     readData(m_socket->readAll());
 
 }
@@ -1130,6 +1130,7 @@ void MainWindow::SendReq(const QString &Req)
 
 void MainWindow::on_actionTEARDOWN_triggered()
 {
+    IsPlayM4 = false;
     SendReq("TEARDOWN");
     return;
 
