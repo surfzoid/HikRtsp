@@ -170,7 +170,7 @@ void MainWindow::readyRead()
 
     if (!IsPlayM4)
         readData(m_socket->readAll());
-    if (m_socket->bytesAvailable() < 14400)
+    if (m_socket->bytesAvailable() < 144000)
         return;
     readData(m_socket->readAll());
 

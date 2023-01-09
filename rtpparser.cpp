@@ -262,9 +262,9 @@ QByteArray RTPParser::processFrame(QByteArray payload)
 
     if (payload.length() > 3)
     {
-        DbgToWrite = "<" + QString::number(nalUnitType) +  "> " + payload.toHex(' ') + "\n";
+        /*DbgToWrite = "<" + QString::number(nalUnitType) +  "> " + payload.toHex(' ') + "\n";
     FsDbg.write(DbgToWrite.toUtf8());
-    FsDbg.flush();
+    FsDbg.flush();*/
     }
 
     if (isCompleteFrame) {
