@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(manager, SIGNAL(authenticationRequired(QNetworkReply*, QAuthenticator*)),
             this, SLOT(authenticationRequired(QNetworkReply*, QAuthenticator*)));
 
+    VideoV = new HikNetSdk();
     //MainWindow::Connect();
 
 }
@@ -77,7 +78,8 @@ void MainWindow::Connect()
 
     quint16 RPort = 554;
     if (url.port() != -1)RPort = url.port();
-    m_socket->connectToHost(url.host(),RPort);
+    //m_socket->connectToHost(url.host(),RPort);
+    m_socket->connectToHost(Settings->CamIp,8000);
     //m_socket->setReadBufferSize(10240);
     //m_socket->setProtocolTag("RTSP");
     //char *RBuff ;
@@ -303,7 +305,7 @@ void MainWindow::readData(QByteArray Resp)
             {
                 Fs.write(Payload);
                 Fs.flush();
-                //PlayM4(Payload);
+                PlayM4(Payload);
                 FullPayload = false;
             }
 
@@ -508,12 +510,13 @@ void MainWindow::PlayM4(QByteArray Payload)
 void MainWindow::Play()
 {
 
-    QFile file(":/xml/ReqXml.xml");
+    /*QFile file(":/xml/ReqXml.xml");
     file.open(QIODevice::ReadOnly);
     QString SetXMLReq = file.readAll();
-    file.close();
-    QUrl Adresse("http://admin:pass@192.168.27.67:800/SDK/play/100/004");
-    //QUrl Adresse("http://192.168.27.67:803/ISAPI/Streaming/Channels/102/RTMPCfg");
+    file.close();*/
+    QSettings settings;
+    //QUrl Adresse("http://admin:pass@" + Settings->CamIp + ":" + Settings->CamPortHttp + "/SDK/play/100/004");
+    QUrl Adresse("http://" + Settings->CamIp + ":" + Settings->CamPortHttp + "/codebase/version.xml?version=V4.0.1build191111");
 
 
     //manager->put((QNetworkRequest)Adresse,SetXMLReq.toUtf8());
@@ -521,6 +524,7 @@ void MainWindow::Play()
     //manager->put((QNetworkRequest)Adresse,outgoingData);
     //manager->get((QNetworkRequest)Adresse);
     manager->get((QNetworkRequest)Adresse);
+    manager->get((QNetworkRequest)(QUrl)("http://" + Settings->CamIp + ":" + Settings->CamPortHttp + "/ISAPI/Security/token?format=json"));
 }
 
 void MainWindow::slotError(QNetworkReply::NetworkError code)
@@ -689,8 +693,8 @@ void MainWindow::on_actionPlay_triggered()
     if (url.isEmpty())
         return;*/
     //FromDocEx();
-    MainWindow::Connect();
-    //Play();
+    //MainWindow::Connect();
+    Play();
 }
 void MainWindow::WaitEndRead()
 {
@@ -732,6 +736,19 @@ void MainWindow::replyFinished(QNetworkReply *reply)
         QByteArray Response = reply->readAll();
 
         qDebug() << Response;
+        QString ResponseChr = QString(Response);
+        if (ResponseChr.contains("Token")) {
+            QStringList Vals = ResponseChr.split(":");
+            QString TmpToken = Vals.at(Vals.length() - 1);
+            TmpToken = TmpToken.remove("\n");
+            TmpToken = TmpToken.remove("\t");
+            TmpToken = TmpToken.remove("}");
+            TmpToken = TmpToken.remove("\"");
+            Token = TmpToken;
+            manager->head((QNetworkRequest)(QUrl)("http://" + Settings->CamIp + ":" + Settings->CamPortHttp + "/ISAPI/Security/advanced?format=json&security=1&iv=" + Token));
+            manager->head((QNetworkRequest)(QUrl)("http://" + Settings->CamIp + ":" + Settings->CamPortHttp + "/SDK/play?modelErrorCode=true&token=" + Token));
+            manager->get((QNetworkRequest)(QUrl)("http://" + Settings->CamIp + ":" + Settings->CamPortHttp + "/SDK/play/100/004?modelErrorCode=true&token=" + Token));
+        }
 
     }
 
@@ -754,8 +771,11 @@ void MainWindow::authenticationRequired(QNetworkReply *reply, QAuthenticator *au
         qDebug() << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         qDebug() << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
 
+        QSettings settings;
+        qDebug()<< "CamUser!" << Settings->CamUser;
         authenticator->setUser(Settings->CamUser);
         authenticator->setPassword(Settings->CamPass);
+        manager->get((QNetworkRequest)(QUrl)("http://" + Settings->CamIp + ":" + Settings->CamPortHttp + "/ISAPI/Security/token?format=json"));
 
 
     }
@@ -1045,13 +1065,18 @@ void MainWindow::on_actionOPTION_triggered()
 
 void MainWindow::on_actiontest_triggered()
 {
+    QSettings settings;
+    VideoV = new  HikNetSdk();
+    VideoV->show();
+    VideoV->LoginInfo(8001,Settings->CamIp,Settings->CamUser,Settings->CamPass);
+    VideoV->Play();
+    return;
     ui->comboBoxUris->clear();
     ui->comboBoxUris->addItems(Settings->FillCmbUris());
     return;
     FromDocEx();
     return;
     qDebug() << "need:";
-    qDebug() << "e20e6f504a6dba2378838411eab7127f";
     nonce = "df570ea6dcfb0efb5398eb7641c3f343";
     realm = "\"IP Camera(F2348)\"";
     Authanticate("DESCRIBE");

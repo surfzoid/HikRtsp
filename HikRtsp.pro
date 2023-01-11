@@ -12,7 +12,9 @@ SOURCES += \
     HikRtsp.cpp \
     h264rtpsource.cpp \
     h265rtpsource.cpp \
+    hiknetsdk.cpp \
     main.cpp \
+    myglwidget.cpp \
     rtpparser.cpp \
     settingsform.cpp \
     simplecrypt.cpp
@@ -21,16 +23,21 @@ HEADERS += \
     HikRtsp.h \
     h264rtpsource.h \
     h265rtpsource.h \
+    hiknetsdk.h \
     include/ApplePlayM4.h \
+    include/HCNetSDK.h \
     include/LinuxPlayM4.h \
     include/PlayM4.h \
     include/WindowsPlayM4.h \
+    myglwidget.h \
     rtpparser.h \
     settingsform.h \
     simplecrypt.h
 
 FORMS += \
     HikRtsp.ui \
+    hiknetsdk.ui \
+    myglwidget.ui \
     settingsform.ui
 
 TRANSLATIONS += \
@@ -41,7 +48,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-unix:!macx: LIBS +=  -L$$PWD/lib/$$QMAKE_HOST.arch/ -Wl,-rpath=lib/$$QMAKE_HOST.arch:/HCNetSDKCom:./ -lPlayCtrl -lAudioRender -lSuperRender
+unix:!macx: LIBS +=  -L$$PWD/lib/$$QMAKE_HOST.arch/ -Wl,-rpath=lib/$$QMAKE_HOST.arch:/HCNetSDKCom:./ -lhcnetsdk -lPlayCtrl -lAudioRender -lSuperRender
 
 INCLUDEPATH += $$PWD/lib/x86_64
 DEPENDPATH += $$PWD/lib/x86_64
